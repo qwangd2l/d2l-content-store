@@ -23,6 +23,7 @@ class D2lContentStore extends DependencyProvider(LitElement) {
 	constructor() {
 		super();
 
+		// eslint-disable-next-line no-unused-expressions
 		import('./d2l-content-store-app.js');
 	}
 
