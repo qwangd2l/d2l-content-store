@@ -1,8 +1,5 @@
 import { css, html, LitElement } from 'lit-element/lit-element.js';
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { installRouter } from 'pwa-helpers/router.js';
 import { InternalLocalizeMixin } from './mixins/internal-localize-mixin.js';
-import { navigate } from './actions/app.js';
 
 class D2lContentStoreApp extends InternalLocalizeMixin(LitElement) {
 	static get properties() {
