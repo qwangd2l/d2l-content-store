@@ -26,7 +26,7 @@ class D2lContentStore extends DependencyProvider(LitElement) {
 		// Dynamically importing d2l-content-store-app
 		// to avoid "process is not defined" error caused by importing
 		// redux at the top level.
-		window.process = { env: { NODE_ENV: 'production' } };
+		// window.process = { env: { NODE_ENV: 'production' } };
 
 		// eslint-disable-next-line no-unused-expressions
 		import('./d2l-content-store-app.js');
