@@ -10,7 +10,7 @@ export class RoutingStore {
 
 		this.routeCtx = {};
 		this.page = '';
-		this.queryParams = [];
+		this.queryParams = {};
 		this.subView = '';
 	}
 
