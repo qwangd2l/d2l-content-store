@@ -64,7 +64,7 @@ class D2lContentStoreManage extends PageViewElement {
 			}
 			:host([dir="rtl"]) .dropdown-menu {
 				right: 0.75rem !important;
-				left: 0;
+				left: 0 !important;
 			}
 		`];
 	}
