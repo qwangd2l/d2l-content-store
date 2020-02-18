@@ -3,6 +3,7 @@ import { heading2Styles, bodyStandardStyles } from '@brightspace-ui/core/compone
 import { observe } from 'mobx';
 import { PageViewElement } from './components/page-view-element.js';
 import { navigationSharedStyle } from './styles/d2l-navigation-shared-styles.js';
+import { DependencyRequester } from './mixins/dependency-requester-mixin.js';
 import '@brightspace-ui/core/components/button/button.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import '@brightspace-ui/core/components/icons/icon.js';
@@ -13,7 +14,7 @@ import 'd2l-dropdown/d2l-dropdown.js';
 import 'd2l-dropdown/d2l-dropdown-content.js';
 import './components/two-column-layout.js';
 
-class D2lContentStoreManage extends PageViewElement {
+class D2lContentStoreManage extends DependencyRequester(PageViewElement) {
 	static get properties() {
 		return {
 		};
@@ -103,8 +104,6 @@ class D2lContentStoreManage extends PageViewElement {
 						</d2l-menu>
 					</d2l-dropdown-menu>
 				</d2l-dropdown-button>
-				<input type="file" id="fileInput" @change=${this.handleFileChange} style="display:none" multiple />
-				<file-uploader id="uploader" files=${this.files} @upload-completed=${this.handleUploadCompleted}></file-uploader>
 			</d2l-dropdown>
 			<div class="list-container">
 				<d2l-list separators="between">
@@ -121,6 +120,7 @@ class D2lContentStoreManage extends PageViewElement {
 				</d2l-list>
 			</div>
 		</div>
+		<input type="file" id="fileInput" @change=${this.handleFileChange} style="display:none" multiple />
 		`;
 	}
 
@@ -149,22 +149,21 @@ class D2lContentStoreManage extends PageViewElement {
 		`;
 	}
 
+	connectedCallback() {
+		super.connectedCallback();
+		this.uploader = this.requestDependency('uploader');
+	}
+
 	handleFileUploadClick() {
 		this.shadowRoot.querySelector('#fileInput').click();
 	}
 
 	handleFileChange(event) {
-		const files = [];
 		for (let i = 0; i < event.target.files.length; i++) {
-			files[i] = event.target.files[i];
+			this.uploader.uploadFile(event.target.files[i]);
 		}
 
-		const uploader = this.shadowRoot.querySelector('#uploader');
-		uploader.enqueueFiles(files);
-	}
-
-	handleUploadCompleted(event) {
-		console.log(event);
+		event.target.value = '';
 	}
 
 	goToFilesView() {
