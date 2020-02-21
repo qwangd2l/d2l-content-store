@@ -27,7 +27,7 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 	static get styles() {
 		return [heading4Styles, bodySmallStyles, css`
 			:host {
-				display: block;
+				display: none;
 			}
 			:host([hidden]) {
 				display: none;
