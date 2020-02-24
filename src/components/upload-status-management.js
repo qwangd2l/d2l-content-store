@@ -78,7 +78,7 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 				align-items: center;
 				display: flex;
 				flex-direction: row;
-				height: 2rem;
+				height: 1.6rem;
 			}
 			.upload-file-name-container {
 				align-items: center;
@@ -110,12 +110,12 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 				color: var(--d2l-color-feedback-error);
 				min-width: 0;
 			}
-			.content-icon-contianer {
+			.content-icon-container {
 				flex: 0 0 auto;
-				padding: 0.5rem;
+				padding: 0 0.5rem;
 			}
 			.upload-failed-message {
-				margin-bottom: 0.05rem;
+				margin-bottom: 0.40rem;
 				margin-left: 2.2rem;
 				margin-top: -0.15rem;
 			}
@@ -197,7 +197,7 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 					<d2l-list-item>
 						<d2l-list-item-content>
 							<div class="upload-item-container">
-								<div class="content-icon-contianer">
+								<div class="content-icon-container">
 									<content-icon type="${upload.extension}"></content-icon>
 								</div>
 								${upload.error ? this.renderUploadError(upload) : this.renderUploadProgress(upload)}
