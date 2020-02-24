@@ -5,6 +5,7 @@ import { ResizeObserver } from 'd2l-resize-aware/resize-observer-module.js';
 import { heading4Styles, bodySmallStyles } from '@brightspace-ui/core/components/typography/styles.js';
 import { DependencyRequester } from '../mixins/dependency-requester-mixin.js';
 import { InternalLocalizeMixin } from '../mixins/internal-localize-mixin.js';
+import { rootStore } from '../state/root-store.js';
 import '@brightspace-ui/core/components/button/button-icon.js';
 import '@brightspace-ui/core/components/colors/colors.js';
 import '@brightspace-ui/core/components/icons/icon.js';
@@ -128,13 +129,16 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 		const documentObserver = new ResizeObserver(this._resized.bind(this));
 		documentObserver.observe(document.body, { attributes: true });
 
-		this.toggleShowHideText = this.localize('hide');
-		this.toggleShowHideIcon = 'd2l-tier1:chevron-down';
+		this.toggleShowHideText = '';
+		this.toggleShowHideIcon = '';
 	}
 
 	firstUpdated() {
 		super.firstUpdated();
 		this._resized();
+
+		this.toggleShowHideText = this.localize('hide');
+		this.toggleShowHideIcon = 'd2l-tier1:chevron-down';
 	}
 
 	renderHeaderTitle() {
@@ -154,21 +158,21 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 		return html`<span role="status" aria-live="polite" class="header-title d2l-heading-4">${message}</span>`;
 	}
 
-	renderUploadProgress(upload) {
+	renderUploadProgress({ progress, file }) {
 		let progressIndicator = html``;
-		if (upload.progress === 100) {
+		if (progress === 100) {
 			progressIndicator = html`
 				<d2l-icon class="upload-file-complete" icon="tier2:check"></d2l-icon>
 			`;
 		} else {
 			progressIndicator = html`
-				<d2l-meter-circle class="upload-file-progress" value=${upload.progress} max="100" percent></d2l-meter-circle>
+				<d2l-meter-circle class="upload-file-progress" value=${progress} max="100" percent></d2l-meter-circle>
 			`;
 		}
 
 		return html`
 			<div class="upload-file-name-container">
-				<span class="upload-file-name">${upload.file.name}</span>
+				<span class="upload-file-name">${file.name}</span>
 			</div>
 			${progressIndicator}
 		`;
@@ -225,7 +229,7 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 						<d2l-button-icon icon="d2l-tier1:close-small" text="${this.localize('close')}" @click="${this._closeDialog}"></d2l-button-icon>
 					</div>
 				</div>
-				<div class="content" id="content">
+				<div class="content" id="content" tabindex="0">
 					${this.renderContent()}
 				</div>
 			</div>
@@ -234,7 +238,7 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 
 	connectedCallback() {
 		super.connectedCallback();
-		this.uploader = this.requestDependency('uploader');
+		this.uploader = this.requestDependency('uploader') || rootStore.uploader;
 	}
 
 	_resized() {
