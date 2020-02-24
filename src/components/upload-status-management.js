@@ -115,7 +115,9 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 				padding: 0.5rem;
 			}
 			.upload-failed-message {
+				margin-bottom: 0.05rem;
 				margin-left: 2.2rem;
+				margin-top: -0.15rem;
 			}
 			:host([dir="rtl"]) .upload-failed-message {
 				margin-left: 0;
@@ -185,12 +187,6 @@ class UploadStatusManagement extends InternalLocalizeMixin(RtlMixin(MobxReaction
 			</div>
 			<d2l-icon class="upload-file-error" icon="tier2:alert"></d2l-icon>
 
-		`;
-	}
-
-	renderUploadSecondaryText(upload) {
-		return html`
-			${upload.error ? this.localize('uploadFailed') : ''}
 		`;
 	}
 
