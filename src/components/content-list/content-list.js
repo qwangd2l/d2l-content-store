@@ -96,11 +96,11 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(LitElement))
 	render() {
 		return html`
 			<content-list-header @change-sort=${this.changeSort}></content-list-header>
-			<d2l-list id="d2l-content-store-list">
+			<div id="d2l-content-store-list">
 				${this.renderNotFound()}
 				${this.contentItems.map(item => this.renderContentItem(item))}
 				${this.renderGhosts(this.loading ? 5 : 0)}
-			</d2l-list>
+			</div>
 		`;
 	}
 
@@ -113,6 +113,7 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(LitElement))
 			id=${item.id}
 			revision-id=${item.lastRevId}
 			selectable
+			type=${type}
 		>
 			<content-icon type="${iconType}" slot="icon"></content-icon>
 			<div slot="title">${item.lastRevTitle}</div>
@@ -124,15 +125,17 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(LitElement))
 
 	renderGhosts(count) {
 		return new Array(count).fill().map(() => html`
-			<content-list-item-ghost></content-list-item-ghost>
+			<d2l-list><content-list-item-ghost></content-list-item-ghost></d2l-list>
 		`);
 	}
 
 	renderNotFound() {
 		return !this.loading && this.contentItems.length === 0 ? html`
-			<d2l-list-item class="d2l-body-compact">
-				${this.localize('noResultsFound')}
-			</d2l-list-item>
+			<d2l-list>
+				<d2l-list-item class="d2l-body-compact">
+					${this.localize('noResultsFound')}
+				</d2l-list-item>
+			</d2l-list>
 		` : html``;
 	}
 }

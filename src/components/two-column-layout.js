@@ -57,9 +57,7 @@ class TwoColumnLayout extends RtlMixin(LitElement) {
 				border-bottom: 1px solid var(--d2l-color-gypsum);
 			}
 			.primary {
-				height: 100%;
 				margin-left: var(--sidebar-width, 350px);
-				overflow-x: auto;
 				width: 100%;
 			}
 			:host([dir="rtl"]) .primary {
@@ -86,15 +84,15 @@ class TwoColumnLayout extends RtlMixin(LitElement) {
 					<div class="sidebar-header">
 						<slot name="sidebar-header"></slot>
 					</div>
-					<div class="content sidebar-content">
+					<div class="content" id="sidebar-content">
 						<slot name="sidebar"></slot>
 					</div>
 				</div>
 				<div id="primary" class="primary column">
-					<div class="primary-header">
+					<div class="primary-header" id="primary-header">
 						<slot class="primary-header-slot" name="primary-header"></slot>
 					</div>
-					<div class="content primary-content">
+					<div class="content" id="primary-content">
 						<slot name="primary"></slot>
 					</div>
 				</div>
@@ -110,12 +108,10 @@ class TwoColumnLayout extends RtlMixin(LitElement) {
 	_adjustPrimary() {
 		const sidebarElement = this.shadowRoot.querySelector('#sidebar');
 		const primaryElement = this.shadowRoot.querySelector('#primary');
-		if (primaryElement && sidebarElement) {
-			if (primaryElement.offsetHeight <= sidebarElement.offsetHeight) {
-				primaryElement.style.minHeight = sidebarElement.style.height;
-			} else {
-				primaryElement.style.minHeight = '100%';
-			}
+		const primaryContentElement = this.shadowRoot.querySelector('#primary-content');
+		if (primaryElement && sidebarElement && primaryContentElement) {
+			primaryElement.style.minHeight = sidebarElement.style.height;
+			primaryContentElement.style.minHeight = sidebarElement.style.height;
 		}
 	}
 
