@@ -64,6 +64,9 @@ class TwoColumnLayout extends RtlMixin(LitElement) {
 				margin-left: 0px;
 				margin-right: var(--sidebar-width, 350px);
 			}
+			.primary-content {
+				min-width: 500px;
+			}
 		`;
 	}
 
@@ -92,7 +95,7 @@ class TwoColumnLayout extends RtlMixin(LitElement) {
 					<div class="primary-header" id="primary-header">
 						<slot class="primary-header-slot" name="primary-header"></slot>
 					</div>
-					<div class="content" id="primary-content">
+					<div class="content primary-content" id="primary-content">
 						<slot name="primary"></slot>
 					</div>
 				</div>

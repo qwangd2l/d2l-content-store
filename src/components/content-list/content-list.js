@@ -33,6 +33,10 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(LitElement))
 			:host([hidden]) {
 				display: none;
 			}
+
+			.title {
+				word-break: break-word;
+			}
 		`];
 	}
 
@@ -116,7 +120,7 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(LitElement))
 			type=${type}
 		>
 			<content-icon type="${iconType}" slot="icon"></content-icon>
-			<div slot="title">${item.lastRevTitle}</div>
+			<div slot="title" class="title">${item.lastRevTitle}</div>
 			<div slot="type">${type}</div>
 			<relative-date slot="date" value=${item[this.dateField]}></relative-date>
 		</content-list-item>

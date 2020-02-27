@@ -18,9 +18,10 @@ import '../content-icon.js';
 import { DependencyRequester } from '../../mixins/dependency-requester-mixin.js';
 import { InternalLocalizeMixin } from '../../mixins/internal-localize-mixin.js';
 import { useNewWindowForDownload } from '../../util/content-type.js';
+import { rootStore } from '../../state/root-store.js';
 
 const actionsDefaultZIndex = 2;
-const actionActiveZIndex = 5;
+const actionsActiveZIndex = 5;
 
 class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitElement)) {
 	static get properties() {
@@ -29,7 +30,8 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			revisionId: { type: String, attribute: 'revision-id' },
 			type: { type: String },
 			disabled: { type: Boolean },
-			selectable: { type: Boolean }
+			selectable: { type: Boolean },
+			dropdownBoundary: { type: Object, attribute: false }
 		};
 	}
 
@@ -44,6 +46,7 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	constructor() {
 		super();
 		this.selectable = true;
+		this.dropdownBoundary = {};
 	}
 
 	connectedCallback() {
@@ -54,6 +57,7 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	firstUpdated() {
 		super.firstUpdated();
 		this.addEventListener('d2l-dropdown-close', this.dropdownClosed);
+		this.addEventListener('d2l-dropdown-open', this.adjustDropdownBoundary);
 	}
 
 	render() {
@@ -85,7 +89,7 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 						?disabled=${this.disabled}
 					></d2l-button-icon>
 					<d2l-dropdown-more text="${this.localize('moreActions')}" @click=${this.dropdownClicked}>
-						<d2l-dropdown-menu id="actions-dropdown-menu" no-auto-fit align="end">
+						<d2l-dropdown-menu id="actions-dropdown-menu" align="end" boundary=${JSON.stringify(this.dropdownBoundary)}>
 							<d2l-menu label="${this.localize('moreActions')}">
 								<d2l-menu-item text="${this.localize('download')}" @click="${this.download()}"></d2l-menu-item>
 							</d2l-menu>
@@ -128,10 +132,24 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			const opened = actionsDropdownMenu && actionsDropdownMenu.opened;
 			e.target.focus();
 			if (opened) {
-				e.target.parentNode.style.zIndex = actionActiveZIndex;
+				e.target.parentNode.style.zIndex = actionsActiveZIndex;
 			} else {
 				e.target.parentNode.style.zIndex = actionsDefaultZIndex;
 			}
+		}
+	}
+
+	adjustDropdownBoundary() {
+		const target = this.shadowRoot.querySelector('d2l-dropdown-more');
+		const topOffsetForDropdownMenu = 25;
+
+		if (target) {
+			const distanceToTop = target.getBoundingClientRect().top;
+			const finalBoundingTop = distanceToTop - rootStore.appTop - topOffsetForDropdownMenu;
+
+			this.dropdownBoundary = {
+				above: Math.max(finalBoundingTop, 70)
+			};
 		}
 	}
 
