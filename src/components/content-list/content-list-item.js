@@ -126,6 +126,8 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 		};
 	}
 
+	// The class "actions" and methods dropdownClicked and dropdownClosed
+	// are used to work around an issue with dropdown menus inside a list item: https://github.com/BrightspaceUI/core/issues/399
 	dropdownClicked(e) {
 		if (e && e.target && e.target.parentNode) {
 			const actionsDropdownMenu = this.shadowRoot.querySelector('#actions-dropdown-menu');
@@ -136,6 +138,13 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			} else {
 				e.target.parentNode.style.zIndex = actionsDefaultZIndex;
 			}
+		}
+	}
+
+	dropdownClosed() {
+		const actionsElement = this.shadowRoot.querySelector('#actions');
+		if (actionsElement) {
+			actionsElement.style.zIndex = actionsDefaultZIndex;
 		}
 	}
 
@@ -151,13 +160,6 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 			this.dropdownBoundary = {
 				above: Math.max(finalBoundingTop, minimumBoundingTop)
 			};
-		}
-	}
-
-	dropdownClosed() {
-		const actionsElement = this.shadowRoot.querySelector('#actions');
-		if (actionsElement) {
-			actionsElement.style.zIndex = actionsDefaultZIndex;
 		}
 	}
 }

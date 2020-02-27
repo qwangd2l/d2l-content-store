@@ -58,6 +58,7 @@ class TwoColumnLayout extends RtlMixin(LitElement) {
 			}
 			.primary {
 				margin-left: var(--sidebar-width, 350px);
+				overflow-x: auto;
 				width: 100%;
 			}
 			:host([dir="rtl"]) .primary {
