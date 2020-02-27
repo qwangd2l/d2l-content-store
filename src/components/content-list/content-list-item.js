@@ -142,13 +142,14 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	adjustDropdownBoundary() {
 		const target = this.shadowRoot.querySelector('d2l-dropdown-more');
 		const topOffsetForDropdownMenu = 25;
+		const minimumBoundingTop = 70;
 
 		if (target) {
 			const distanceToTop = target.getBoundingClientRect().top;
 			const finalBoundingTop = distanceToTop - rootStore.appTop - topOffsetForDropdownMenu;
 
 			this.dropdownBoundary = {
-				above: Math.max(finalBoundingTop, 70)
+				above: Math.max(finalBoundingTop, minimumBoundingTop)
 			};
 		}
 	}
