@@ -234,7 +234,7 @@ class ContentListItem extends DependencyRequester(InternalLocalizeMixin(LitEleme
 	titleInputChangedHandler() {
 		const titleInputElement = this.shadowRoot.querySelector('#rename-input');
 		const titleInputValue = titleInputElement && titleInputElement.value;
-		this.confirmDisabled = !titleInputValue || Boolean(titleInputValue.match(/^\s*$/));
+		this.confirmDisabled = !titleInputValue || titleInputValue.trim().length === 0;
 	}
 }
 

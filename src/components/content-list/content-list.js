@@ -155,10 +155,18 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(LitElement))
 	}
 
 	contentListItemRenamedHandler(e) {
-		if (e && e.detail && e.detail.id && e.detail.title) {
-			const index = this.contentItems.findIndex(c => c.id === e.detail.id);
+		const { detail } = e;
+
+		if (!detail) {
+			return;
+		}
+
+		const { id, title } = detail;
+
+		if (id && title) {
+			const index = this.contentItems.findIndex(c => c.id === id);
 			if (index >= 0 && index < this.contentItems.length) {
-				this.contentItems[index].lastRevTitle = e.detail.title;
+				this.contentItems[index].lastRevTitle = title;
 				this.contentItems[index][this.dateField] = (new Date()).toISOString();
 				const relativeDateElement = this.shadowRoot.querySelector(`#relative-date-${this.contentItems[index].id}`);
 				relativeDateElement.updateValue(this.contentItems[index][this.dateField]);
