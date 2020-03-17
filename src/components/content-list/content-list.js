@@ -81,7 +81,7 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(NavigationMi
 		const contentListElem = this.shadowRoot.querySelector('#d2l-content-store-list');
 		const bottom = contentListElem.getBoundingClientRect().top + window.pageYOffset + contentListElem.clientHeight;
 		const scrollY = window.pageYOffset + window.innerHeight;
-		if (bottom - scrollY < this.infiniteScrollThreshold && this.hasNextPage) {
+		if (bottom - scrollY < this.infiniteScrollThreshold && this.hasNextPage && !this.loading) {
 			this.loadNext(true);
 		}
 	}
@@ -150,11 +150,7 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(NavigationMi
 		}
 	}
 
-	async loadNext(fromScroll = false) {
-		if (fromScroll && this.loading === true) {
-			return;
-		}
-
+	async loadNext() {
 		this.loading = true;
 		const searchResult = await this.apiClient.searchContent({
 			start: this.searchQueryStart,
