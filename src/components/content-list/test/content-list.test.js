@@ -30,13 +30,9 @@ describe('content-list', () => {
 		await el.updateComplete;
 	});
 
-	afterEach(async() => {
-		el.contentItems = [];
-	});
-
 	it('passes all aXe tests with content items', async() => {
 		el.loading = false;
-		el.contentItems = testContentItems;
+		el.contentItems = testContentItems.slice();
 		await el.updateComplete;
 		await expect(el).to.be.accessible();
 	});
