@@ -55,7 +55,7 @@ describe('content-list', () => {
 
 	it('uploading content item does not appear if there is a next page and should be last item', async() => {
 		el.loading = false;
-		el.contentItems = testContentItems;
+		el.contentItems = testContentItems.slice();
 		el.hasNextPage = true;
 		el.sortQuery = 'updatedAt:asc';
 		await el.updateComplete;
@@ -78,7 +78,7 @@ describe('content-list', () => {
 	it('uploading content item with sort on updatedAt:asc', async() => {
 		el.loading = false;
 		el.sortQuery = 'updatedAt:asc';
-		el.contentItems = testContentItems;
+		el.contentItems = testContentItems.slice();
 		await el.updateComplete;
 
 		const now = new Date();
@@ -99,7 +99,7 @@ describe('content-list', () => {
 	it('uploading content item with sort on updatedAt:desc', async() => {
 		el.loading = false;
 		el.sortQuery = 'updatedAt:desc';
-		el.contentItems = testContentItems;
+		el.contentItems = testContentItems.slice();
 		await el.updateComplete;
 
 		const now = new Date();
