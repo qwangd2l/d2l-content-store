@@ -1,4 +1,5 @@
 import { expect, fixture, html } from '@open-wc/testing';
+import { val } from '../../../../locales/en.js';
 import '../content-list.js';
 
 describe('content-list', () => {
@@ -220,15 +221,18 @@ describe('content-list', () => {
 	});
 
 	describe('deletion tests', () => {
+		const deleteToastRemovedMessage = val.removedFile;
+		const deleteToastUndoMessage = val.actionUndone;
+
 		it('deletion removes item from contentItems', async() => {
 			el.loading = false;
 			el.contentItems = testContentItems.slice();
 			await el.updateComplete;
 
-			const undoToast = el.shadowRoot.querySelector('#undo-delete-toast');
+			const deleteToast = el.shadowRoot.querySelector('#delete-toast');
 			const contentListItem = el.shadowRoot.querySelector(`#${testContentItems[0].id}`);
 
-			expect(undoToast.hasAttribute('open')).to.be.false;
+			expect(deleteToast.hasAttribute('open')).to.be.false;
 			expect(el.contentItems.length).to.equal(testContentItems.length);
 
 			contentListItem.dispatchDeletedEvent();
@@ -236,7 +240,8 @@ describe('content-list', () => {
 
 			expect(el.contentItems.findIndex(c => c.id === testContentItems[0].id)).to.equal(-1);
 			expect(el.contentItems.length).to.equal(testContentItems.length - 1);
-			expect(undoToast.hasAttribute('open')).to.be.true;
+			expect(deleteToast.hasAttribute('open')).to.be.true;
+			expect(deleteToast.innerHTML).to.contain(deleteToastRemovedMessage);
 		});
 
 		it('undo delete using the toast option', async() => {
@@ -244,10 +249,10 @@ describe('content-list', () => {
 			el.contentItems = testContentItems.slice();
 			await el.updateComplete;
 
-			const undoToast = el.shadowRoot.querySelector('#undo-delete-toast');
+			const deleteToast = el.shadowRoot.querySelector('#delete-toast');
 			const contentListItem = el.shadowRoot.querySelector(`#${testContentItems[0].id}`);
 
-			expect(undoToast.hasAttribute('open')).to.be.false;
+			expect(deleteToast.hasAttribute('open')).to.be.false;
 			expect(el.contentItems.length).to.equal(testContentItems.length);
 
 			contentListItem.dispatchDeletedEvent();
@@ -255,17 +260,18 @@ describe('content-list', () => {
 
 			expect(el.contentItems.findIndex(c => c.id === testContentItems[0].id)).to.equal(-1);
 			expect(el.contentItems.length).to.equal(testContentItems.length - 1);
-			expect(undoToast.hasAttribute('open')).to.be.true;
+			expect(deleteToast.hasAttribute('open')).to.be.true;
+			expect(deleteToast.innerHTML).to.contain(deleteToastRemovedMessage);
 
-			const alertElement = undoToast.shadowRoot.querySelector('d2l-alert');
+			const alertElement = deleteToast.shadowRoot.querySelector('d2l-alert');
 			const undoButtonInAlert = alertElement.shadowRoot.querySelector('d2l-button-subtle');
-			const undoCompletedToast = el.shadowRoot.querySelector('#undo-delete-completed-toast');
 			await undoButtonInAlert.click();
 			await el.updateComplete;
-			await undoCompletedToast.updateComplete;
+			await deleteToast.updateComplete;
+			await el.updateComplete;
 
-			expect(undoToast.hasAttribute('open')).to.be.false;
-			expect(undoCompletedToast.hasAttribute('open')).to.be.true;
+			expect(deleteToast.innerHTML).to.contain(deleteToastUndoMessage);
+			expect(deleteToast.hasAttribute('open')).to.be.true;
 			expect(el.contentItems.length).to.equal(testContentItems.length);
 			expect(el.contentItems.findIndex(c => c.id === testContentItems[0].id)).to.equal(0);
 		});

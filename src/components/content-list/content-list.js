@@ -59,6 +59,8 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(NavigationMi
 		this.loading = false;
 		this.hasNextPage = false;
 		this.searchQueryStart = 0;
+		this.alertToastMessage = '';
+		this.alertToastButtonText = '';
 		this.undoDeleteObject = {};
 
 		const {
@@ -203,18 +205,12 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(NavigationMi
 			</content-file-drop>
 
 			<d2l-alert-toast
-				id="undo-delete-toast"
+				id="delete-toast"
 				type="default"
-				button-text=${this.localize('undo')}
-				announce-text=${this.localize('removedFile')}
+				button-text=${this.alertToastButtonText}
+				announce-text=${this.alertToastMessage}
 				@d2l-alert-button-pressed=${this.undoDeleteHandler}>
-				${this.localize('removedFile')}
-			</d2l-alert-toast>
-			<d2l-alert-toast
-				id="undo-delete-completed-toast"
-				type="default"
-				announce-text=${this.localize('actionUndone')}>
-				${this.localize('actionUndone')}
+				${this.alertToastMessage}
 			</d2l-alert-toast>
 		`;
 	}
@@ -352,25 +348,21 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(NavigationMi
 	}
 
 	showUndoDeleteToast() {
-		const undoDeleteToastElement = this.shadowRoot.querySelector('#undo-delete-toast');
-		const undoDeleteCompletedToastElement = this.shadowRoot.querySelector('#undo-delete-completed-toast');
-		if (undoDeleteCompletedToastElement) {
-			undoDeleteCompletedToastElement.removeAttribute('open');
-		}
+		const deleteToastElement = this.shadowRoot.querySelector('#delete-toast');
 
-		if (undoDeleteToastElement) {
-			undoDeleteToastElement.removeAttribute('open');
-			undoDeleteToastElement.setAttribute('open', true);
+		if (deleteToastElement) {
+			deleteToastElement.removeAttribute('open');
+			this.alertToastMessage = this.localize('removedFile');
+			this.alertToastButtonText = this.localize('undo');
+			deleteToastElement.setAttribute('open', true);
 		}
 	}
 
 	async undoDeleteHandler() {
-		const undoDeleteToastElement = this.shadowRoot.querySelector('#undo-delete-toast');
-		if (undoDeleteToastElement) {
-			undoDeleteToastElement.removeAttribute('open');
-		}
+		const deleteToastElement = this.shadowRoot.querySelector('#delete-toast');
 
-		if (this.undoDeleteObject && this.undoDeleteObject.id) {
+		if (deleteToastElement && this.undoDeleteObject && this.undoDeleteObject.id) {
+			deleteToastElement.removeAttribute('open');
 			await this.apiClient.undeleteContent({ contentId: this.undoDeleteObject.id });
 
 			if (!this.areAnyFiltersActive()) {
@@ -378,11 +370,10 @@ class ContentList extends DependencyRequester(InternalLocalizeMixin(NavigationMi
 			}
 
 			this.undoDeleteObject = {};
-
-			const undoDeleteCompletedToastElement = this.shadowRoot.querySelector('#undo-delete-completed-toast');
-			if (undoDeleteCompletedToastElement) {
-				undoDeleteCompletedToastElement.setAttribute('open', true);
-			}
+			this.alertToastMessage = this.localize('actionUndone');
+			this.alertToastButtonText = '';
+			this.requestUpdate();
+			deleteToastElement.setAttribute('open', true);
 		}
 	}
 
